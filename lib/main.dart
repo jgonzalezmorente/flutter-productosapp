@@ -13,8 +13,8 @@ import 'package:productos_app/services/services.dart';
    Widget build(BuildContext context) {
      return MultiProvider(
        providers: [
-         ChangeNotifierProvider( create: ( _ ) => ProductsService() )
-
+         ChangeNotifierProvider( create: ( _ ) => ProductsService() ),
+         ChangeNotifierProvider( create: ( _ ) => AuthService() )
        ],
        child: MyApp(),       
      );
@@ -27,13 +27,15 @@ import 'package:productos_app/services/services.dart';
      return MaterialApp(
        debugShowCheckedModeBanner: false,
        title: 'ProductosApp',
-       initialRoute: 'login',
+       initialRoute: 'checking',
        routes: {
-         'login'    : ( _ ) => LoginScreen(),
-         'register' : ( _ ) => RegisterScreen(),
+         'checking' : ( _ ) => CheckAuthScreen(),
          'home'     : ( _ ) => HomeScreen(),
+         'login'    : ( _ ) => LoginScreen(),
          'product'  : ( _ ) => ProductScreen(),
+         'register' : ( _ ) => RegisterScreen(),
        },
+       scaffoldMessengerKey: NotificationService.messengerKey,
        theme: ThemeData.light().copyWith(
          scaffoldBackgroundColor: Colors.grey[ 300 ],
 

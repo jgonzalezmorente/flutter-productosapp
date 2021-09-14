@@ -13,6 +13,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final productService = Provider.of<ProductsService>( context );
+    final authService    = Provider.of<AuthService>( context, listen: false );
 
     if( productService.isLoading ) return LoadingScreen();
 
@@ -20,6 +21,14 @@ class HomeScreen extends StatelessWidget {
 
       appBar: AppBar(
         title: Text( 'Productos' ),
+        leading: IconButton(
+          icon: Icon( Icons.logout_outlined ),
+          onPressed: () {
+            authService.logout();
+            Navigator.pushReplacementNamed( context, 'login' );
+          }
+        ),
+
         centerTitle: true,
       ),
 

@@ -42,6 +42,7 @@
       <intent>
           <action android:name="android.media.action.IMAGE_CAPTURE" />
       </intent>
-    </queries>    
+    </queries>
+    <uses-permission android:name="android.permission.INTERNET"/>    
 </manifest>
 

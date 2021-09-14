@@ -1,8 +1,8 @@
 
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,6 +13,8 @@ class ProductsService extends ChangeNotifier {
   final String _base_url = 'flutter-varios-d52e3-default-rtdb.europe-west1.firebasedatabase.app';
   final List<Product> products = [];
   late Product selectedProduct;
+
+  final storage = new FlutterSecureStorage();
 
   File? newPictureFile;
   
@@ -30,7 +32,9 @@ class ProductsService extends ChangeNotifier {
     this.isLoading = true;
     notifyListeners();
 
-    final url = Uri.https( _base_url, 'products.json' );
+    final url = Uri.https( _base_url, 'products.json', {
+      'auth': await storage.read( key: 'token' ) ?? ''
+    });
     final resp = await http.get( url );
 
     final Map<String, dynamic> productsMap = json.decode( resp.body );
@@ -72,7 +76,9 @@ class ProductsService extends ChangeNotifier {
 
   Future<String> updateProduct( Product product ) async {
 
-    final url = Uri.https( _base_url, 'products/${ product.id }.json' );
+    final url = Uri.https( _base_url, 'products/${ product.id }.json', {
+      'auth': await storage.read( key: 'token' ) ?? ''
+    });
     final resp = await http.put( url, body: product.toJson() );
     final decodedData = resp.body;
     print( decodedData );
@@ -88,7 +94,9 @@ class ProductsService extends ChangeNotifier {
 
   Future<String> createProduct( Product product ) async {
 
-    final url = Uri.https( _base_url, 'products.json' );
+    final url = Uri.https( _base_url, 'products.json', {
+      'auth': await storage.read( key: 'token' ) ?? ''
+    });
     final resp = await http.post( url, body: product.toJson() );
     final decodedData = json.decode( resp.body );
 
@@ -117,7 +125,7 @@ class ProductsService extends ChangeNotifier {
     this.isSaving = true;
     notifyListeners();
 
-    final url = Uri.parse( 'https://api.cloudinary.com/v1_1/dhmpw8wbp/image/upload?upload_preset=lrwllys8' );
+    final url = Uri.parse( 'https://api.cloudinary.com/v1_1/dhmpw8wbp/image/upload/?upload_preset=lrwllys8' );
 
     final imageUploadRequest = http.MultipartRequest( 'POST', url );
 
